@@ -1,0 +1,20 @@
+# Terraform
+.terraform/
+.terraform.lock.hcl
+*.tfstate
+*.tfstate.*
+crash.log
+
+# S3 backend local cache
+.env
+
+# Lambda build
+modules/lambda/app.zip
+
+# Python
+__pycache__/
+*.pyc
+
+# IDE
+.vscode/
+.idea/
