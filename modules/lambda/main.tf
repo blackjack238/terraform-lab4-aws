@@ -100,6 +100,25 @@ resource "aws_iam_role_policy" "s3_audit_access" {
   })
 }
 
+# comprehend policy
+resource "aws_iam_role_policy" "comprehend_access" {
+  name = "${var.function_name}_comprehend_access"
+  role = aws_iam_role.lambda_exec.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "comprehend:DetectSentiment"
+        ]
+        Resource = "*"
+      }
+    ]
+  })
+}
+
 # Lambda function
 resource "aws_lambda_function" "api_handler" {
   filename         = data.archive_file.lambda_zip.output_path

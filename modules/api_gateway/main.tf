@@ -25,7 +25,7 @@ resource "aws_apigatewayv2_integration" "lambda_integration" {
   payload_format_version = "2.0"
 }
 
-# 3. Маршрути саме під твій варіант
+# 3. Маршрути
 resource "aws_apigatewayv2_route" "post_tasks" {
   api_id    = aws_apigatewayv2_api.http_api.id
   route_key = "POST /tasks"
@@ -44,6 +44,12 @@ resource "aws_apigatewayv2_route" "put_task" {
   target    = "integrations/${aws_apigatewayv2_integration.lambda_integration.id}"
 }
 
+resource "aws_apigatewayv2_route" "post_prioritize_task" {
+  api_id    = aws_apigatewayv2_api.http_api.id
+  route_key = "POST /tasks/{id}/prioritize"
+  target    = "integrations/${aws_apigatewayv2_integration.lambda_integration.id}"
+}
+
 # 4. Stage $default
 resource "aws_apigatewayv2_stage" "default" {
   api_id      = aws_apigatewayv2_api.http_api.id
@@ -58,7 +64,6 @@ resource "aws_lambda_permission" "api_gw" {
   function_name = var.lambda_function_name
   principal     = "apigateway.amazonaws.com"
 
-  # Дозволяємо виклики з будь-якого маршруту і методу цього HTTP API
   source_arn = "${aws_apigatewayv2_api.http_api.execution_arn}/*/*"
 }
 
